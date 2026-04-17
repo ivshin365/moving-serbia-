@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "title": "Moving Serbia",
+    "subtitle": "Get the best moving offers quickly and easily"
+  },
+  "progress": {
+    "step1": "Move Details",
+    "step2": "Inventory",
+    "step3": "Review"
+  },
+  "step1": {
+    "title": "Move Details",
+    "name": "Full name",
+    "namePlaceholder": "Enter your name",
+    "phone": "Phone number",
+    "phonePlaceholder": "+381 6X XXX XXXX",
+    "fromSection": "Moving from",
+    "toSection": "Moving to",
+    "city": "City",
+    "cityPlaceholder": "e.g. Belgrade",
+    "address": "Address",
+    "addressPlaceholder": "Street and number",
+    "floor": "Floor",
+    "floorPlaceholder": "0 = ground floor",
+    "elevator": "Elevator",
+    "elevatorYes": "Yes",
+    "elevatorNo": "No",
+    "date": "Moving date",
+    "time": "Moving time",
+    "next": "Continue"
+  },
+  "step2": {
+    "title": "What are you moving?",
+    "subtitle": "Select items to include in your move",
+    "livingRoom": "Living Room",
+    "bedroom": "Bedroom",
+    "kitchen": "Kitchen",
+    "other": "Other",
+    "boxes": "Boxes",
+    "boxesLabel": "Number of boxes",
+    "back": "Back",
+    "next": "Continue",
+    "items": {
+      "sofa": "Sofa",
+      "armchair": "Armchair",
+      "tv": "TV",
+      "tvstand": "TV Stand",
+      "table": "Table",
+      "wardrobe": "Wardrobe",
+      "bed_single": "Bed (single)",
+      "bed_double": "Bed (double)",
+      "bed_king": "Bed (king size)",
+      "mattress": "Mattress",
+      "dresser": "Dresser",
+      "nightstand": "Nightstand",
+      "fridge": "Fridge",
+      "washing_machine": "Washing Machine",
+      "dishwasher": "Dishwasher",
+      "microwave": "Microwave",
+      "bicycle": "Bicycle",
+      "piano": "Piano",
+      "desk": "Desk",
+      "office_chair": "Office Chair"
+    }
+  },
+  "step3": {
+    "title": "Review & Confirm",
+    "subtitle": "Check your details before sending",
+    "moveDetails": "Move Details",
+    "name": "Name",
+    "phone": "Phone",
+    "from": "From",
+    "to": "To",
+    "floor": "Floor",
+    "elevator": "Elevator",
+    "elevatorYes": "Yes",
+    "elevatorNo": "No",
+    "date": "Date",
+    "time": "Time",
+    "inventory": "Inventory",
+    "boxes": "Boxes",
+    "noItems": "No items selected",
+    "back": "Back",
+    "submit": "Submit Request",
+    "submitting": "Sending..."
+  },
+  "success": {
+    "title": "Request Received!",
+    "message": "Your moving request has been successfully submitted. Movers from our database will contact you by phone with offers.",
+    "details": "Please be available on the phone number you provided.",
+    "back": "Submit New Request"
+  },
+  "errors": {
+    "required": "This field is required",
+    "phone": "Enter a valid phone number",
+    "date": "Date must be in the future",
+    "floor": "Floor must be 0 or higher"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "movers": "Movers",
+    "requests": "Requests",
+    "addMover": "Add Mover",
+    "moverName": "Mover / Company name",
+    "moverPhone": "Phone",
+    "moverCity": "City coverage",
+    "add": "Add",
+    "delete": "Delete",
+    "noMovers": "No movers registered",
+    "noRequests": "No requests yet",
+    "status": "Status",
+    "date": "Date",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Admin Login",
+    "password": "Password",
+    "submit": "Login",
+    "error": "Incorrect password"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "title": "Selidbe Srbija",
+    "subtitle": "Brzo i lako do beste ponude za selidbu"
+  },
+  "progress": {
+    "step1": "Detalji selidbe",
+    "step2": "Inventar",
+    "step3": "Pregled"
+  },
+  "step1": {
+    "title": "Detalji selidbe",
+    "name": "Ime i prezime",
+    "namePlaceholder": "Unesite vaše ime",
+    "phone": "Broj telefona",
+    "phonePlaceholder": "+381 6X XXX XXXX",
+    "fromSection": "Odakle se selite",
+    "toSection": "Kamo se selite",
+    "city": "Grad",
+    "cityPlaceholder": "Npr. Beograd",
+    "address": "Adresa",
+    "addressPlaceholder": "Ulica i broj",
+    "floor": "Sprat",
+    "floorPlaceholder": "0 = prizemlje",
+    "elevator": "Lift",
+    "elevatorYes": "Da",
+    "elevatorNo": "Ne",
+    "date": "Datum selidbe",
+    "time": "Vreme selidbe",
+    "next": "Nastavi"
+  },
+  "step2": {
+    "title": "Šta selite?",
+    "subtitle": "Izaberite stavke koje uključujete u selidbu",
+    "livingRoom": "Dnevna soba",
+    "bedroom": "Spavaća soba",
+    "kitchen": "Kuhinja",
+    "other": "Ostalo",
+    "boxes": "Kutije",
+    "boxesLabel": "Broj kutija",
+    "back": "Nazad",
+    "next": "Nastavi",
+    "items": {
+      "sofa": "Sofa",
+      "armchair": "Fotelja",
+      "tv": "Televizor",
+      "tvstand": "Polica za TV",
+      "table": "Sto",
+      "wardrobe": "Orman",
+      "bed_single": "Krevet (jednokrevetni)",
+      "bed_double": "Krevet (dvokrevetni)",
+      "bed_king": "Krevet (king size)",
+      "mattress": "Dušek",
+      "dresser": "Komoda",
+      "nightstand": "Noćni stočić",
+      "fridge": "Frižider",
+      "washing_machine": "Veš mašina",
+      "dishwasher": "Mašina za sudove",
+      "microwave": "Mikrovalna",
+      "bicycle": "Bicikl",
+      "piano": "Klavir",
+      "desk": "Kancelarijski sto",
+      "office_chair": "Kancelarijska stolica"
+    }
+  },
+  "step3": {
+    "title": "Pregled i potvrda",
+    "subtitle": "Proverite detalje pre slanja",
+    "moveDetails": "Detalji selidbe",
+    "name": "Ime",
+    "phone": "Telefon",
+    "from": "Odakle",
+    "to": "Kamo",
+    "floor": "Sprat",
+    "elevator": "Lift",
+    "elevatorYes": "Da",
+    "elevatorNo": "Ne",
+    "date": "Datum",
+    "time": "Vreme",
+    "inventory": "Inventar",
+    "boxes": "Kutije",
+    "noItems": "Nema izabranih stavki",
+    "back": "Nazad",
+    "submit": "Pošalji zahtev",
+    "submitting": "Slanje..."
+  },
+  "success": {
+    "title": "Zahtev je primljen!",
+    "message": "Vaš zahtev za selidbu je uspešno poslat. Prevozioci iz naše baze će vas kontaktirati telefonom sa ponudama.",
+    "details": "Sačekajte pozive od prevozioca. Preporučujemo da budete dostupni na broju koji ste naveli.",
+    "back": "Pošalji novi zahtev"
+  },
+  "errors": {
+    "required": "Ovo polje je obavezno",
+    "phone": "Unesite valjan broj telefona",
+    "date": "Datum mora biti u budućnosti",
+    "floor": "Sprat mora biti broj 0 ili veći"
+  },
+  "admin": {
+    "title": "Admin panel",
+    "movers": "Prevozioci",
+    "requests": "Zahtevi",
+    "addMover": "Dodaj prevozioca",
+    "moverName": "Ime prevozioca / firme",
+    "moverPhone": "Telefon",
+    "moverCity": "Grad pokrivenosti",
+    "add": "Dodaj",
+    "delete": "Obriši",
+    "noMovers": "Nema registrovanih prevozilaca",
+    "noRequests": "Nema zahteva",
+    "status": "Status",
+    "date": "Datum",
+    "logout": "Odjavi se"
+  },
+  "login": {
+    "title": "Admin prijava",
+    "password": "Lozinka",
+    "submit": "Prijavi se",
+    "error": "Pogrešna lozinka"
+  }
+}
