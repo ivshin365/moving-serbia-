@@ -2,6 +2,62 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 
+// Serbian Latin ↔ Cyrillic transliteration
+// Multi-char digraphs must be checked before single-char mappings
+const LATIN_TO_CYR: [string, string][] = [
+  ['lj', 'љ'], ['nj', 'њ'], ['dž', 'џ'], ['Lj', 'Љ'], ['Nj', 'Њ'], ['Dž', 'Џ'],
+  ['LJ', 'Љ'], ['NJ', 'Њ'], ['DŽ', 'Џ'],
+  ['đ', 'ђ'], ['Đ', 'Ђ'], ['č', 'ч'], ['Č', 'Ч'], ['ć', 'ћ'], ['Ć', 'Ћ'],
+  ['š', 'ш'], ['Š', 'Ш'], ['ž', 'ж'], ['Ž', 'Ж'],
+  ['a', 'а'], ['b', 'б'], ['c', 'ц'], ['d', 'д'], ['e', 'е'], ['f', 'ф'],
+  ['g', 'г'], ['h', 'х'], ['i', 'и'], ['j', 'ј'], ['k', 'к'], ['l', 'л'],
+  ['m', 'м'], ['n', 'н'], ['o', 'о'], ['p', 'п'], ['r', 'р'], ['s', 'с'],
+  ['t', 'т'], ['u', 'у'], ['v', 'в'], ['z', 'з'],
+  ['A', 'А'], ['B', 'Б'], ['C', 'Ц'], ['D', 'Д'], ['E', 'Е'], ['F', 'Ф'],
+  ['G', 'Г'], ['H', 'Х'], ['I', 'И'], ['J', 'Ј'], ['K', 'К'], ['L', 'Л'],
+  ['M', 'М'], ['N', 'Н'], ['O', 'О'], ['P', 'П'], ['R', 'Р'], ['S', 'С'],
+  ['T', 'Т'], ['U', 'У'], ['V', 'В'], ['Z', 'З'],
+];
+
+const CYR_TO_LATIN: [string, string][] = [
+  ['љ', 'lj'], ['њ', 'nj'], ['џ', 'dž'], ['Љ', 'Lj'], ['Њ', 'Nj'], ['Џ', 'Dž'],
+  ['ђ', 'đ'], ['Ђ', 'Đ'], ['ч', 'č'], ['Ч', 'Č'], ['ћ', 'ć'], ['Ћ', 'Ć'],
+  ['ш', 'š'], ['Ш', 'Š'], ['ж', 'ž'], ['Ж', 'Ž'],
+  ['а', 'a'], ['б', 'b'], ['в', 'v'], ['г', 'g'], ['д', 'd'], ['е', 'e'],
+  ['з', 'z'], ['и', 'i'], ['ј', 'j'], ['к', 'k'], ['л', 'l'], ['м', 'm'],
+  ['н', 'n'], ['о', 'o'], ['п', 'p'], ['р', 'r'], ['с', 's'], ['т', 't'],
+  ['у', 'u'], ['ф', 'f'], ['х', 'h'], ['ц', 'c'],
+  ['А', 'A'], ['Б', 'B'], ['В', 'V'], ['Г', 'G'], ['Д', 'D'], ['Е', 'E'],
+  ['З', 'Z'], ['И', 'I'], ['Ј', 'J'], ['К', 'K'], ['Л', 'L'], ['М', 'M'],
+  ['Н', 'N'], ['О', 'O'], ['П', 'P'], ['Р', 'R'], ['С', 'S'], ['Т', 'T'],
+  ['У', 'U'], ['Ф', 'F'], ['Х', 'H'], ['Ц', 'C'],
+];
+
+function applyMap(text: string, map: [string, string][]): string {
+  let result = '';
+  let i = 0;
+  while (i < text.length) {
+    let matched = false;
+    for (const [from, to] of map) {
+      if (text.startsWith(from, i)) {
+        result += to;
+        i += from.length;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) { result += text[i]; i++; }
+  }
+  return result;
+}
+
+const latinToCyrillic = (s: string) => applyMap(s, LATIN_TO_CYR);
+const cyrillicToLatin = (s: string) => applyMap(s, CYR_TO_LATIN);
+
+function isCyrillic(s: string) {
+  return /[\u0400-\u04FF]/.test(s);
+}
+
 interface NominatimResult {
   place_id: number;
   display_name: string;
@@ -45,6 +101,7 @@ function formatSecondary(item: NominatimResult): string {
 
 export default function AddressAutocomplete({ value, onChange, placeholder, searchType, inputClassName }: Props) {
   const [suggestions, setSuggestions] = useState<NominatimResult[]>([]);
+  const [inputIsCyrillic, setInputIsCyrillic] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -61,37 +118,55 @@ export default function AddressAutocomplete({ value, onChange, placeholder, sear
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, []);
 
+  const queryNominatim = useCallback(async (q: string, signal: AbortSignal): Promise<NominatimResult[]> => {
+    const params = new URLSearchParams({
+      q,
+      countrycodes: 'rs',
+      format: 'json',
+      limit: '6',
+      addressdetails: '1',
+    });
+    if (searchType === 'city') params.set('featureType', 'settlement');
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, {
+      signal,
+      headers: { 'Accept-Language': 'sr,sr-Latn,en' },
+    });
+    return res.json();
+  }, [searchType]);
+
   const fetchSuggestions = useCallback(async (q: string) => {
     if (abortRef.current) abortRef.current.abort();
     abortRef.current = new AbortController();
+    const signal = abortRef.current.signal;
 
     setLoading(true);
     try {
-      const params = new URLSearchParams({
-        q,
-        countrycodes: 'rs',
-        format: 'json',
-        limit: '6',
-        addressdetails: '1',
-      });
-      if (searchType === 'city') params.set('featureType', 'settlement');
+      const cyrillicInput = isCyrillic(q);
+      // When Latin input, also query with Cyrillic transliteration (OSM Serbia data is primarily Cyrillic)
+      const queries = cyrillicInput
+        ? [q]
+        : [q, latinToCyrillic(q)];
 
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, {
-        signal: abortRef.current.signal,
-        headers: { 'Accept-Language': 'sr,en' },
-      });
-      const data: NominatimResult[] = await res.json();
-      setSuggestions(data);
-      setOpen(data.length > 0);
+      const results = await Promise.all(queries.map(query => queryNominatim(query, signal)));
+      const seen = new Set<number>();
+      const merged: NominatimResult[] = [];
+      for (const batch of results) {
+        for (const item of batch) {
+          if (!seen.has(item.place_id)) { seen.add(item.place_id); merged.push(item); }
+        }
+      }
+      setSuggestions(merged);
+      setOpen(merged.length > 0);
     } catch (err: unknown) {
       if ((err as Error)?.name !== 'AbortError') setSuggestions([]);
     } finally {
       setLoading(false);
     }
-  }, [searchType]);
+  }, [searchType, queryNominatim]);
 
   const handleChange = (val: string) => {
     onChange(val);
+    setInputIsCyrillic(isCyrillic(val));
     setSuggestions([]);
     setOpen(false);
 
@@ -102,10 +177,20 @@ export default function AddressAutocomplete({ value, onChange, placeholder, sear
   };
 
   const handleSelect = (item: NominatimResult) => {
-    const primary = formatPrimary(item, searchType);
+    let primary = formatPrimary(item, searchType);
+    // Convert result to match the script the user was typing in
+    if (!inputIsCyrillic && isCyrillic(primary)) primary = cyrillicToLatin(primary);
+    else if (inputIsCyrillic && !isCyrillic(primary)) primary = latinToCyrillic(primary);
     onChange(primary);
     setOpen(false);
     setSuggestions([]);
+  };
+
+  const displayPrimary = (item: NominatimResult) => {
+    let name = formatPrimary(item, searchType);
+    if (!inputIsCyrillic && isCyrillic(name)) name = cyrillicToLatin(name);
+    else if (inputIsCyrillic && !isCyrillic(name)) name = latinToCyrillic(name);
+    return name;
   };
 
   return (
@@ -158,7 +243,7 @@ export default function AddressAutocomplete({ value, onChange, placeholder, sear
                 </span>
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-[#0C1827] truncate group-hover:text-[#E05A2B] transition-colors">
-                    {formatPrimary(item, searchType)}
+                    {displayPrimary(item)}
                   </p>
                   <p className="text-xs text-[#B0AEAD] truncate mt-0.5">
                     {formatSecondary(item)}
